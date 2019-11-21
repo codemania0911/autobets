@@ -14,8 +14,6 @@
               <b-navbar-nav class="ml-auto" v-if="$store.state.loggedIn">
                 <b-nav-text>{{ $store.state.user.username }}</b-nav-text>
                 
-                <Balance/>
-
                 <b-nav-item @click.prevent="logout()">Logout</b-nav-item>
               </b-navbar-nav>
 
@@ -32,13 +30,10 @@
       </template>
 
       <script>
-      import Balance from '~/components/Balance.vue';
 
       export default {
       
-      components:{
-          Balance
-       },
+
       
       methods: {
           logout () {

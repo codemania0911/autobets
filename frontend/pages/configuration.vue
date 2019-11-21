@@ -2,16 +2,43 @@
 
 
 <template>
-<div class="table">
-    <tr v-for="(entry, id) in combined" :key=id>
-        <td>{{entry.type == 'event' ? event.start_time : ''}} </td>
-        <td>{{ entry.type == 'event' ?  event.event_name : ''}} </td>
-        <td>{{ entry.type = 'market' ? market.name : ''}}</td>
-        <td>{{ entry.type == 'runner' ? runner.name : ''}}</td>
+  <div class="course-list-row">
+    <th scope="col"> Start date </th>
+    <th scope="col"> Event name</th>
+    <th scope="col">Market</th>
+    <th scope="col">Status</th>
+    <th scope="col">Position</th>
+    <th scope="col">Runner</th>
+    <th scope="col">Back Odds</th>
+    <th scope="col">Lay Odds</th>
+    <th scope="col">B1 Trig</th>
+    <th scope="col">B2 Trig</th>
+    <th scope="col">L1 Trig</th>
+    <th scope="col">L2 Trig</th>
+    <th scope="col">Auto Stake</th>
+    <th scope="col">Back Stake</th>
+    <th scope="col">Lay Stake</th>
+
+
+    <tr v-for="event in events" :key="event.id" >
+
+        <td>{{ event.start_time }} </td>
+        <td>{{ event.event_name }}</td>
+        <td>                       </td>
+        <td>        Is inplay      </td>
+        <td>         Position Data </td>
+        <td>         Back Odds     </td>
+
+      <SelectStake/>
+
+        <td/>
+
+
+
+
     </tr>
- </div>
 
-
+  </div>
 </template>
 
 <script>
@@ -26,23 +53,30 @@ export default {
   },
 
  async asyncData ({ app }) {
-   
-    let response = await app.$axios.get('/api/events/')
-    const events = response.data.results
 
-    response = await app.$axios.get('/api/markets')
-    const markets = response.data.results
+    try {
+      const events = await app.$axios.get('/api/events/')
+      const markets = await app.$axios.get('/api/markets/')
 
-    response = await app.$axios.get('/api/runners')
-    const runners = response.data.results
+      return {
+        events: events.data.results,
+        markets: markets.data.results,
 
-    return {
-      events,
-      markets,
-      runners
+        error: false
+      }
+    } catch (e) {
+      console.log('error', e)
+      return {
+        events: [],
+        markets:[],
+        error: true
+      }
     }
- }
-}
+  },
+};
+
+
+
 
 </script>
 
@@ -56,10 +90,7 @@ font-weight: 400;
 padding: 10px;
 text-align: left;
 width: 0%;
-border-bottom: 1px solid black;
-
 }
-
 
 
 </style>

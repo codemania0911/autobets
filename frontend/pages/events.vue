@@ -9,6 +9,11 @@
                   :label= "label"
                   
                   />
+      <div>
+      <button type="button" class="btn btn-dark">delete</button>
+      <button type="button" class="btn btn-dark">clear</button>
+      <button type="button" class="btn btn-dark">add</button>
+    </div>
   </div>
     
 
