@@ -1,0 +1,100 @@
+version: '3.4'
+
+services:
+  db:
+    restart: always
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data  
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres   
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432  
+  
+  redis:
+    restart: always
+    image: redis
+    volumes:
+      - redisdata:/data
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    ports:
+      - "5555:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+  
+  django:
+    build:
+      context: ./backend
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - DJANGO_SECRET_KEY=seekret
+    command: ./wait-for-it.sh db:5432 -- ./autobets/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - rabbitmq
+
+    
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:latest
+
+    ports:
+      - "5672:5672"
+    restart: on-failure
+
+  celeryworker:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - django
+      - rabbitmq
+    command: ./wait-for-it.sh db:5432 -- bash -c "celery -A autobets worker -l info"
+
+
+  celerybeat:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app  
+    depends_on:
+      - db
+      - django
+      - rabbitmq
+    command: ./wait-for-it.sh db:5432 -- bash -c "celery -A autobets beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+
+  
+  nuxt:
+    build:
+      context: ./frontend
+    environment:
+      - API_URI=http://django:8000/api
+    command: bash -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - django
+      - redis
+    
+volumes:
+  pgdata:
+  redisdata:
+
+
