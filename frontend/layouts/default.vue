@@ -8,6 +8,7 @@
                 <b-nav-item to="/events">Events</b-nav-item>
                 <b-nav-item to="/monitor">Monitor</b-nav-item>
                 <b-nav-item to="/configuration">Configuration</b-nav-item>
+                <b-nav-item to="/reports">Reports</b-nav-item>
 
               </b-navbar-nav>
 

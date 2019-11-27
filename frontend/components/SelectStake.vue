@@ -12,15 +12,15 @@
         selected: null,
         options: [
           { value: null, text: 'Off' },
-          { value: 'a', text: '2%' },
-          { value: 'b', text: '3%' },
-          { value: 'c', text: '4%' },
-          { value: 'd', text: '5%' },
-          { value: 'e', text: '6%' },
-          { value: 'f', text: '7%' },
-          { value: 'g', text: '8%' },
-          { value: 'h', text: '9%' },
-          { value: 'i', text: '10%' },
+          { value: 0.02, text: '2%' },
+          { value: 0.03, text: '3%' },
+          { value: 0.04, text: '4%' },
+          { value: 0.05, text: '5%' },
+          { value: 0.06, text: '6%' },
+          { value: 0.07, text: '7%' },
+          { value: 0.08, text: '8%' },
+          { value: 0.09, text: '9%' },
+          { value: 0.1, text: '10%' },
 
 ]
       }

@@ -146,6 +146,12 @@ CELERY_BEAT_SCHEDULE = {
     'schedule': timedelta(seconds=10) ,
     'args': ()
     } ,
+    
+    'get_reports': {
+    'task': 'apimb.tasks.get_reports' ,
+    'schedule': timedelta(seconds=10) ,
+    'args': ()
+    } ,
 } 
 
 

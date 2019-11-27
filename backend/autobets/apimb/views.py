@@ -2,10 +2,14 @@ from django.shortcuts import render
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import mixins, viewsets, permissions, status
+from rest_framework.views import APIView
+
 from celery.signals import after_task_publish
-from .models import Event, Market, Runner, Balance
+from .models import Event, Market, Runner, Balance, ReportsMarket
 from .tasks import get_events
-from .serializers import EventSerializer, MarketSerializer, RunnerSerializer, BalanceSerializer, CombinedSerializer
+from .serializers import (
+                        EventSerializer, MarketSerializer, RunnerSerializer, BalanceSerializer, 
+                        CombinedSerializer, ProfitAndLossSerializer)
 from .permissions import EventPermission
 
 
@@ -43,5 +47,12 @@ class CombinedViewSet(mixins.ListModelMixin,
                     viewsets.GenericViewSet, 
                     mixins.RetrieveModelMixin):
 
+
     queryset = Runner.objects.all()
     serializer_class = CombinedSerializer     
+    
+class PandLViewSet(mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+
+    queryset = ReportsMarket.objects.all().order_by('start_time')
+    serializer_class = ProfitAndLossSerializer

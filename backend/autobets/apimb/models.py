@@ -5,6 +5,9 @@ class Login(models.Model):
     username = models.CharField(null=True, max_length=30)
     password = models.CharField(null=True, max_length=30)
 
+class SessionToken(models.Model):
+    session_token = models.CharField(null=True, max_length=40)
+
 class Balance(models.Model):
     exposure = models.FloatField(null=True)
     balance = models.FloatField(null=True)
@@ -144,13 +147,56 @@ class Market(models.Model):
     market_name = models.CharField(max_length=35)
     status = models.CharField(max_length=10)
     volume = models.FloatField(null=True)
+    is_ip = models.CharField(max_length=5)
 
 class Runner(models.Model):
     event = models.ForeignKey(Event, null=True, default=None, on_delete=models.CASCADE)
     market = models.ForeignKey(Market, null=True, default=None, on_delete=models.CASCADE)
-
     runner_id = models.BigIntegerField(unique=True)
-    #event_id = models.BigIntegerField(null=True)
     name = models.CharField(max_length=500)
     back_odds = models.FloatField(null=True)
     lay_odds = models.FloatField(null=True)
+
+
+class ReportsMarket(models.Model):
+
+    i_d = models.CharField(null=True, max_length=50)
+    name = models.CharField(null=True, max_length=50)
+    event_id = models.CharField(null=True, max_length=50)
+    event_name = models.CharField(null=True, max_length=50)
+    sport_id = models.CharField(null=True, max_length=50)
+    start_time = models.CharField(null=True, max_length=50)
+    settled_time = models.CharField(null=True, max_length=50)
+    stake = models.CharField(null=True, max_length=50)
+    profit_and_loss = models.CharField(null=True, max_length=50)
+    commission = models.CharField(null=True, max_length=50)
+    profit_and_loss = models.CharField(null=True, max_length=50)
+    net_profit_and_loss = models.CharField(null=True, max_length=50)
+    selections = models.CharField(null=True, max_length=50)
+
+class ReportsSelections(models.Model):
+    runner_id = models.CharField(null=True, max_length=50)
+    runner_name = models.CharField(null=True, max_length=50)
+    side = models.CharField(null=True, max_length=50)
+    odds = models.CharField(null=True, max_length=50)
+    stake = models.CharField(null=True, max_length=50)
+    profit_and_loss = models.CharField(null=True, max_length=50)
+    commission = models.CharField(null=True, max_length=50)
+    net_profit_and_loss = models.CharField(null=True, max_length=50)
+    bets = models.CharField(null=True, max_length=50)       
+
+class ReportsBets(models.Model):
+    i_d = models.CharField(null=True, max_length=50) 
+    offer_id = models.CharField(null=True, max_length=50) 
+    odds = models.CharField(null=True, max_length=50) 
+    stake = models.CharField(null=True, max_length=50) 
+    adjusted = models.CharField(null=True, max_length=50) 
+    originator = models.CharField(null=True, max_length=50) 
+    inplay = models.CharField(null=True, max_length=50) 
+    submitted_time = models.CharField(null=True, max_length=50) 
+    matched_time = models.CharField(null=True, max_length=50) 
+    settled_time = models.CharField(null=True, max_length=50) 
+    result = models.CharField(null=True, max_length=50) 
+    profit_and_loss = models.CharField(null=True, max_length=50) 
+    commission_type = models.CharField(null=True, max_length=50) 
+    net_profit_and_loss = models.CharField(null=True, max_length=50) 

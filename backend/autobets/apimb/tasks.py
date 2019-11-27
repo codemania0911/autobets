@@ -1,14 +1,14 @@
 
 from __future__ import absolute_import, unicode_literals
 from .client import get_client
-from apimb.models import Event, Runner, Market, Orders, Balance, Stakes
+from apimb.models import Event, Runner, Market, Orders, Balance, Stakes, SessionToken, ReportsMarket, ReportsSelections, ReportsBets
 from matchbook.enums import Side, MarketStates, Boolean, Status
 from celery import shared_task
 import datetime
 import logging
 import json
+import requests
 logger = logging.getLogger(__name__)
-
 
 @shared_task(bind=True)
 def get_events(self):
@@ -41,10 +41,12 @@ def get_events(self):
             market_id = market['id']
             market_name = market['name']
             status = market['status']
-            volume = market['volume']    
+            volume = market['volume'] 
+            is_ip = market['live']   
 
             ma, created = Market.objects.update_or_create(event=ev,market_id=market_id) 
             ma.market_name = market_name
+            ma.is_ip = is_ip
             ma.status = status
             ma.volume = volume       
             ma.save()
@@ -162,5 +164,90 @@ def get_balance(self):
         ex.save() 
         logger.info(f'Matchbook: Scraped from mb get bal')
 
+@shared_task
+def get_reports():
 
-                
+    get_session_token = SessionToken.objects.get(id=1)
+    token = get_session_token.session_token
+    headers = {"session-token" : token}
+    response = requests.get('https://api.matchbook.com/edge/rest/reports/v2/bets/settled',headers=headers)
+    markets = response.json()
+    
+    for m in markets['markets']:
+        i_d = m['id']
+        name = m['name']
+        event_id = m['event-id']
+        event_name =m['event-name']
+        sport_id = m['sport-id']
+        start_time = m['start-time']
+        settled_time = m['settled-time']
+        stake = m['stake']
+        profit_and_loss = m['profit-and-loss']
+        commission = m['commission']
+        profit_and_loss = m['profit-and-loss']
+        net_profit_and_loss = m['net-profit-and-loss']
+        selections = m['selections']
+        mar, created = ReportsMarket.objects.update_or_create(i_d=i_d)
+        mar.name = name
+        mar.event_id = event_id
+        mar.event_name = event_name
+        mar.sport_id = sport_id
+        mar.start_time = start_time
+        mar.settled_time = settled_time
+        mar.profit_and_loss = profit_and_loss
+        mar.commission = commission
+        mar.stake = stake
+        mar.net_profit_and_loss = net_profit_and_loss
+        mar.save()
+    
+    for s in selections:
+        runner_id = s['runner-id']
+        runner_name = s['runner-name']
+        side = s['side']
+        odds = s['odds']
+        stake = s['stake']
+        profit_and_loss = s['profit-and-loss']
+        commission = s['commission']
+        net_profit_and_loss = s['net-profit-and-loss']
+        bets = s['bets']
+        sel, created = ReportsSelections.objects.update_or_create(runner_id=runner_id)
+        sel.runner_name = runner_name
+        sel.side = side
+        sel.odds = odds
+        sel.stake = stake
+        sel.profit_and_loss = profit_and_loss
+        sel.commission = commission
+        sel.net_profit_and_loss = net_profit_and_loss
+        sel.save()
+
+        for b in bets:
+            i_d = b['id']
+            offer_id = b['offer-id']
+            odds = b['odds']
+            stake = b['stake']
+            adjusted = b['adjusted']
+            originator = b['originator']
+            inplay = b['in-play']
+            submitted_time = b['submitted-time']
+            matched_time = b['matched-time']
+            settled_time = b['settled-time']
+            result = b['result']
+            profit_and_loss = b['profit-and-loss']
+            commission_type = b['commission-type']
+            net_profit_and_loss = b['net-profit-and-loss']
+            
+            bet, created = ReportsBets.objects.update_or_create(i_d=i_d)
+            bet.offer_id = offer_id
+            bet.odds = odds
+            bet.stake = stake
+            bet.adjusted = adjusted
+            bet.originator = originator
+            bet.inplay = inplay
+            bet.submitted_time = submitted_time
+            bet.matched_time = matched_time
+            bet.settled_time = settled_time
+            bet.result = result
+            bet.profit_and_loss = profit_and_loss
+            bet.commission_type = commission_type
+            bet.net_profit_and_loss = net_profit_and_loss
+            bet.save()

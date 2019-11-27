@@ -1,8 +1,12 @@
 
 from django.contrib import admin
-from apimb.models import Event, Runner,Market, Balance, Orders, Stakes, Bet, BetTriggers, EventMonitor, UserStakes
+from apimb.models import (Event, Runner,Market, Balance, Orders, 
+                          Stakes, Bet, BetTriggers, EventMonitor, UserStakes,
+                          SessionToken,ReportsBets, ReportsMarket, ReportsSelections,)
 
-
+admin.site.register(ReportsBets)
+admin.site.register(ReportsMarket)
+admin.site.register(ReportsSelections)
 class EventAdmin(admin.ModelAdmin):
 
     list_display = ('sport_id', 'event_id', 'event_name', 'start_time','status')
@@ -85,3 +89,9 @@ class UserStakesAdmin(admin.ModelAdmin):
     list_display = ('back_stake','lay_stake')
 
 admin.site.register(UserStakes, UserStakesAdmin)
+
+class SessionTokenAdmin(admin.ModelAdmin):
+
+    list_display = ['session_token']
+
+admin.site.register(SessionToken, SessionTokenAdmin)

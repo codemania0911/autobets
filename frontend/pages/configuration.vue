@@ -17,6 +17,9 @@
     <th scope="col">L2 Trig</th>
     <th scope="col">Auto Stake</th>
     <th scope="col">Back Stake</th>
+    <th scope="col">Back Stake</th>
+
+    <th scope="col">Back Stake</th>
     <th scope="col">Lay Stake</th>
 
 
