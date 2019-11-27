@@ -1,4 +1,3 @@
-# spacenews
 
 > Nuxt.js project
 
