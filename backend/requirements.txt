@@ -18,3 +18,4 @@ jupyter
 pandas
 numpy
 django-extensions
+smk-python-sdk

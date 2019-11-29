@@ -9,13 +9,11 @@
     <th scope="col">Runner</th>
     <th scope="col">Back Odds</th>
     <th scope="col">Lay Odds</th>
+    <th scope="col">B1 Trig</th>
     <th scope="col">B2 Trig</th>
     <th scope="col">L1 Trig</th>
     <th scope="col">L2 Trig</th>
     <th scope="col">Auto Stake</th>
-    <th scope="col">Back Stake</th>
-    <th scope="col">Back Stake</th>
-
     <th scope="col">Back Stake</th>
     <th scope="col">Lay Stake</th>
 

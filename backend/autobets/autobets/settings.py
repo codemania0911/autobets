@@ -31,6 +31,7 @@ class Base(Configuration):
         'django_celery_results',
         "accounts",
         "apimb",
+        "apism",
     ]
 
     MIDDLEWARE = [

@@ -1,6 +1,6 @@
 <template>
   <div class="line-chart">
-    <LineChart :data="lineChartData" :options="{ maintainAspectRatio: true }" />
+    <LineChart :data="lineChartData" :options="{ maintainAspectRatio: false }" />
   </div>
 </template>
 
